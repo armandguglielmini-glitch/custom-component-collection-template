@@ -1,0 +1,74 @@
+/* =====================
+   Zone d'édition
+===================== */
+.ProseMirror {
+  outline: none;
+  min-height: 200px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #1d1d1f;
+}
+
+.ProseMirror-focused {
+  border-color: #C8A77D !important;
+  box-shadow: 0 0 0 1px #C8A77D33;
+}
+
+/* =====================
+   Bulle (BubbleMenu)
+===================== */
+
+/* Supprime le fond noir et l’ombre Tippy par défaut */
+.tippy-box {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Supprime la petite flèche de la bulle */
+.tippy-box[data-placement^='top'] > .tippy-arrow,
+.tippy-box[data-placement^='bottom'] > .tippy-arrow {
+  display: none !important;
+}
+
+/* =====================
+   Barre de menu interne
+===================== */
+.tippy-box .menu-bar {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8e8e8;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =====================
+   Boutons du menu
+===================== */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s ease;
+  color: #444;
+}
+
+button:hover {
+  color: #C8A77D;
+}
+
+/* =====================
+   Sélecteurs
+===================== */
+select {
+  cursor: pointer;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+}
