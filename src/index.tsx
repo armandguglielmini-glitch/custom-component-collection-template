@@ -1,19 +1,23 @@
 import { FC } from "react";
+import { Retool } from "@tryretool/custom-component-support";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; //
+import "react-quill/dist/quill.snow.css";
 
-// ✅ Composant principal
 export const CustomizableTextArea: FC = () => {
-  // Propriété exposée dans Retool (le texte)
+  // 🧠 Propriété principale (le texte)
   const [value, setValue] = Retool.useStateString({
     name: "value",
-    defaultValue: "",
+    label: "Texte",
+    description: "Contenu de la zone de texte",
+    initialValue: "",
   });
 
-  // Optionnel : taille du champ (exposée aussi)
+  // 📏 Propriété optionnelle (hauteur du composant)
   const [height] = Retool.useStateNumber({
     name: "height",
-    defaultValue: 250,
+    label: "Hauteur",
+    description: "Hauteur du composant en pixels",
+    initialValue: 250,
   });
 
   return (
@@ -41,4 +45,3 @@ export const CustomizableTextArea: FC = () => {
     </div>
   );
 };
-
