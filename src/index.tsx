@@ -4,26 +4,42 @@ import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextStyle from "@tiptap/extension-text-style";
 import { FontSize } from "./FontSize";
+import Select from "react-select";
 import "tippy.js/dist/tippy.css";
-import "./tiptap.css"; // ton style custom
+import "./tiptap.css";
 
 export const CustomizableTextArea: FC = () => {
+  // 1️⃣ Valeur principale
   const [value, setValue] = Retool.useStateString({
     name: "value",
     label: "Texte",
     initialValue: "<p>Commencez à écrire ici...</p>",
   });
 
+  // 2️⃣ Clé d’événement simulée
+  const [updateKey, setUpdateKey] = Retool.useStateNumber({
+    name: "updateKey",
+    label: "Clé de mise à jour",
+    initialValue: 0,
+  });
+
+  let timeout: NodeJS.Timeout;
+
   const editor = useEditor({
     extensions: [
       StarterKit,
       TextStyle,
-      FontSize.configure({
-        types: ["textStyle"],
-      }),
+      FontSize.configure({ types: ["textStyle"] }),
     ],
     content: value,
-    onUpdate: ({ editor }) => setValue(editor.getHTML()),
+    onUpdate: ({ editor }) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        const html = editor.getHTML();
+        setValue(html);           // ✅ Retool reçoit la nouvelle valeur
+        setUpdateKey(Date.now()); // ✅ Retool détecte un changement
+      }, 600);
+    },
   });
 
   if (!editor) return null;
@@ -42,7 +58,6 @@ export const CustomizableTextArea: FC = () => {
         }}
       />
 
-      {/* --- Bubble Menu --- */}
       <BubbleMenu editor={editor} tippyOptions={{ duration: 150 }}>
         <div
           style={{
@@ -67,25 +82,52 @@ export const CustomizableTextArea: FC = () => {
           </button>
 
           {/* Titres */}
-          <select
-            onChange={(e) => {
-              const val = e.target.value;
+          <Select
+            options={[
+              { value: "p", label: "Texte", fontSize: 15 },
+              { value: "h1", label: "Titre 1", fontSize: 22 },
+              { value: "h2", label: "Titre 2", fontSize: 18 },
+              { value: "h3", label: "Titre 3", fontSize: 16 },
+            ]}
+            defaultValue={{ value: "p", label: "Texte", fontSize: 15 }}
+            onChange={(selected) => {
+              const val = selected?.value;
+              if (!val) return;
               if (val === "p") editor.chain().focus().setParagraph().run();
-              else if (val === "h1") editor.chain().focus().toggleHeading({ level: 1 }).run();
-              else if (val === "h2") editor.chain().focus().toggleHeading({ level: 2 }).run();
-              else if (val === "h3") editor.chain().focus().toggleHeading({ level: 3 }).run();
+              else editor
+                .chain()
+                .focus()
+                .toggleHeading({ level: Number(val.replace("h", "")) })
+                .run();
             }}
-            style={{
-              border: "none",
-              background: "transparent",
-              fontFamily: "inherit",
+            styles={{
+              control: (base) => ({
+                ...base,
+                border: "none",
+                boxShadow: "none",
+                background: "transparent",
+                minWidth: "130px",
+                cursor: "pointer",
+                fontFamily: "Inter, sans-serif",
+              }),
+              singleValue: (base, state) => ({
+                ...base,
+                fontSize: state.data.fontSize,
+                fontWeight: 500,
+                color: "#1d1d1f",
+              }),
+              option: (base, state) => ({
+                ...base,
+                fontSize: state.data.fontSize,
+                fontWeight: state.isSelected ? 600 : 400,
+                backgroundColor: state.isSelected ? "#f3f1ed" : "white",
+                color: "#1d1d1f",
+                cursor: "pointer",
+                ":hover": { backgroundColor: "#f3f1ed" },
+              }),
+              dropdownIndicator: (base) => ({ ...base, color: "#C8A77D" }),
             }}
-          >
-            <option value="p">Texte</option>
-            <option value="h1">Titre 1</option>
-            <option value="h2">Titre 2</option>
-            <option value="h3">Titre 3</option>
-          </select>
+          />
 
           {/* Taille de police */}
           <select
@@ -108,4 +150,3 @@ export const CustomizableTextArea: FC = () => {
     </div>
   );
 };
-//
