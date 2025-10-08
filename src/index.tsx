@@ -1,16 +1,44 @@
-import React from 'react'
-import { type FC } from 'react'
+import { FC } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
-import { Retool } from '@tryretool/custom-component-support'
+// ✅ Composant principal
+export const CustomizableTextArea: FC = () => {
+  // Propriété exposée dans Retool (le texte)
+  const [value, setValue] = Retool.useStateString({
+    name: "value",
+    defaultValue: "",
+  });
 
-export const HelloWorld: FC = () => {
-  const [name, _setName] = Retool.useStateString({
-    name: 'name'
-  })
+  // Optionnel : taille du champ (exposée aussi)
+  const [height] = Retool.useStateNumber({
+    name: "height",
+    defaultValue: 250,
+  });
 
   return (
-    <div>
-      <div>Hello {name}!</div>
+    <div style={{ width: "100%", height }}>
+      <ReactQuill
+        theme="snow"
+        value={value}
+        onChange={(content) => setValue(content)}
+        style={{
+          height: "100%",
+          backgroundColor: "white",
+          borderRadius: "10px",
+          fontFamily: "Inter, sans-serif",
+        }}
+        modules={{
+          toolbar: [
+            [{ header: [1, 2, 3, false] }],
+            ["bold", "italic", "underline", "strike"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["link", "blockquote", "code-block"],
+            ["clean"],
+          ],
+        }}
+      />
     </div>
-  )
-}
+  );
+};
+
