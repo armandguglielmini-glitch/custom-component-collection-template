@@ -72,3 +72,32 @@ select {
   border: none;
   font-family: inherit;
 }
+/* Style global du select */
+select {
+  border: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  color: #1d1d1f;
+}
+
+/* Personnalisation des options */
+option[value="p"] {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+option[value="h1"] {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+option[value="h2"] {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+option[value="h3"] {
+  font-size: 16px;
+  font-weight: 500;
+}
